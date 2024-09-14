@@ -60,9 +60,6 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         authorizeHttpRequestsConfig(httpSecurity);
         corsConfig(httpSecurity);
-
-        httpSecurity.csrf(AbstractHttpConfigurer::disable);
-
         return httpSecurity.build();
     }
 
