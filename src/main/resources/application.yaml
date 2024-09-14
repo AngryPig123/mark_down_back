@@ -1,0 +1,50 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    active: local
+
+logging:
+  level:
+    root: debug
+
+---
+server:
+  port: ${BACK_END_LOCAL_PORT:8080}
+
+front:
+  allow-method: GET, POST, PATCH, PUT, DELETE
+  host: ${FRONT_END_LOCAL_HOST:http://localhost:3000}
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ${POSTGRESQL_LOCAL_URL}
+    username: ${POSTGRESQL_LOCAL_USERNAME}
+    password: ${POSTGRESQL_LOCAL_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    open-in-view: false
+
+---
+server:
+  port: ${BACK_END_DEV_PORT:9090}
+
+front:
+  allow-method: GET, POST, PATCH, PUT, DELETE
+  host: ${FRONT_END_LOCAL_HOST:http://localhost:3000}
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
+    url: ${POSTGRESQL_DEV_URL}
+    username: ${POSTGRESQL_DEV_USERNAME}
+    password: ${POSTGRESQL_DEV_PASSWORD}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <logger name="jdbc" level="OFF"/>
+    <logger name="jdbc.sqlonly" level="OFF"/>
+    <logger name="jdbc.sqltiming" level="info"/>
+    <logger name="jdbc.resultsettable" level="info"/>
+    <logger name="jdbc.audit" level="OFF"/>
+    <logger name="jdbc.resultset" level="OFF"/>
+    <logger name="jdbc.connection" level="OFF"/>
+
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" timeReference="contextBirth"/>
+    <timestamp key="byDay" datePattern="yyyy-MM-dd"/>
+    <timestamp key="byYear" datePattern="yyyy"/>
+    <timestamp key="byMonth" datePattern="MM"/>
+    <timestamp key="byDate" datePattern="dd"/>
+    <timestamp key="byTime" datePattern="HH"/>
+    <timestamp key="byMin" datePattern="mm"/>
+    <timestamp key="bySec" datePattern="ss"/>
+
+    <property name="PROJECT_NAME" value="${log.project.name}"/>
+    <property name="CONSOLE_PATTERN"
+              value="%green(%d{yyyy-MM-dd HH:mm:ss}) %boldWhite([ %thread ]) %green([traceId : %X{traceId}]) %boldCyan([ %-5level]) %boldWhite([%logger{36}]) - %msg%n"/>
+
+    <appender name="CONSOLE_INFO" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${CONSOLE_PATTERN}</Pattern>
+        </layout>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE_INFO"/>
+    </root>
+
+</configuration>
