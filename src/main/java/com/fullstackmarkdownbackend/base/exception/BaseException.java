@@ -1,11 +1,7 @@
-package com.fullstackmarkdownbackend.common.exception;
+package com.fullstackmarkdownbackend.base.exception;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 import java.time.LocalDateTime;
 

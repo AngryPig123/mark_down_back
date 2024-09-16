@@ -1,6 +1,6 @@
 package com.fullstackmarkdownbackend.member.dto.res;
 
-import com.fullstackmarkdownbackend.common.exception.BaseException;
+import com.fullstackmarkdownbackend.base.exception.BaseException;
 import com.fullstackmarkdownbackend.member.dto.req.MemberJoinRequest;
 import com.fullstackmarkdownbackend.util.validator.CommonValidatorException;
 import org.junit.jupiter.api.AfterEach;
@@ -35,7 +35,7 @@ class MemberJoinRequestTest {
     @BeforeEach
     void setUp() {
         memberJoinRequest = new MemberJoinRequest(
-                "loginId", "email", "password", "password",
+                "loginId", "email", "1q2w3e4rA!@", "1q2w3e4rA!@",
                 "firstName", "lastName"
         );
     }
@@ -43,7 +43,7 @@ class MemberJoinRequestTest {
     @AfterEach
     void tearDown() {
         memberJoinRequest = new MemberJoinRequest(
-                "loginId", "email", "password", "password",
+                "loginId", "email", "1q2w3e4rA!@", "1q2w3e4rA!@",
                 "firstName", "lastName"
         );
     }

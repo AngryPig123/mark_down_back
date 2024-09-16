@@ -1,8 +1,8 @@
-package com.fullstackmarkdownbackend.common.vo;
+package com.fullstackmarkdownbackend.base.vo;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.vo
- * fileName       : Email
+ * fileName       : PhoneNumber
  * author         : AngryPig123
  * date           : 24. 9. 2.
  * description    :
@@ -11,8 +11,8 @@ package com.fullstackmarkdownbackend.common.vo;
  * -----------------------------------------------------------
  * 24. 9. 2.        AngryPig123       최초 생성
  */
-public class Email {
+public class PhoneNumber {
 
-    //  todo 이메일 값 (허용하는 도메인 검증 등등)
-
+    //  todo 전화번호
+    
 }

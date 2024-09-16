@@ -1,7 +1,6 @@
 package com.fullstackmarkdownbackend.member;
 
-import com.fullstackmarkdownbackend.common.exception.BaseException;
-import lombok.AccessLevel;
+import com.fullstackmarkdownbackend.base.exception.BaseException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

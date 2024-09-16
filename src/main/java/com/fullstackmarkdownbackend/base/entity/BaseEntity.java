@@ -1,4 +1,4 @@
-package com.fullstackmarkdownbackend.common.entity;
+package com.fullstackmarkdownbackend.base.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

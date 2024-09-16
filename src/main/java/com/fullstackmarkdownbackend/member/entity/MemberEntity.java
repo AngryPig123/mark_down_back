@@ -1,14 +1,14 @@
 package com.fullstackmarkdownbackend.member.entity;
 
-import com.fullstackmarkdownbackend.common.entity.BaseEntity;
+import com.fullstackmarkdownbackend.base.entity.BaseEntity;
+import com.fullstackmarkdownbackend.base.vo.EncodedType;
+import com.fullstackmarkdownbackend.base.vo.Password;
+import com.fullstackmarkdownbackend.token.entity.RefreshTokenEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-
-import java.time.LocalDate;
+import lombok.Setter;
 
 /**
  * packageName    : com.learnthreading.fullstackmarkdownbackend.member.entity
@@ -25,6 +25,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Table(name = "tb_member")
+@Setter(AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MemberEntity extends BaseEntity {
 
@@ -43,8 +44,14 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "email", length = 60, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", length = 200, nullable = false, unique = true)
+    @Column(name = "password", length = 200)
     private String password;
+
+    @Column(name = "lock_count")
+    private Integer lockCount;
+
+    @Column(name = "enable")
+    private Boolean enable;
 
     @Column(name = "first_name", length = 50, nullable = false, unique = true)
     private String firstName;
@@ -52,10 +59,14 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "last_name", length = 50, nullable = false, unique = true)
     private String lastName;
 
+    @Transient
+    private final EncodedType passwordEncoderType = EncodedType.BCRYPT;
+
     @PostPersist
     public void postPersist() {
         this.createdBy = id;
         this.lastModifiedBy = id;
+        this.enable = true;
     }
 
     private MemberEntity(String loginId, String email, String password, String firstName, String lastName) {
@@ -64,10 +75,15 @@ public class MemberEntity extends BaseEntity {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.lockCount = 0;
     }
 
     public static MemberEntity insertEntity(String loginId, String email, String password, String firstName, String lastName) {
         return new MemberEntity(loginId, email, password, firstName, lastName);
+    }
+
+    public void passwordEncoding(Password password) {
+        this.password = password.getEncodedPassword();
     }
 
 }

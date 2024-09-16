@@ -1,6 +1,6 @@
 package com.fullstackmarkdownbackend.advice;
 
-import com.fullstackmarkdownbackend.common.exception.BaseException;
+import com.fullstackmarkdownbackend.base.exception.BaseException;
 import com.fullstackmarkdownbackend.util.validator.CommonValidatorException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

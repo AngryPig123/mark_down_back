@@ -12,6 +12,9 @@ logging:
 server:
   port: ${BACK_END_LOCAL_PORT:8080}
 
+jwt:
+  secret-key: ${JWT_SECRET_KEY:slSo10sDkw28318SKJdjwiadsh38DjzusKJAbq1uwUD241}
+
 front:
   allow-method: GET, POST, PATCH, PUT, DELETE
   host: ${FRONT_END_LOCAL_HOST:http://localhost:3000}
@@ -34,6 +37,9 @@ spring:
 ---
 server:
   port: ${BACK_END_DEV_PORT:9090}
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY:slSo10sDkw28318SKJdjwiadsh38DjzusKJAbq1uwUD241}
 
 front:
   allow-method: GET, POST, PATCH, PUT, DELETE

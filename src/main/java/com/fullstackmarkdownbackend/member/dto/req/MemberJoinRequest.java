@@ -35,7 +35,6 @@ public class MemberJoinRequest {
         this.passwordCheck = passwordCheck;
         this.firstName = firstName;
         this.lastName = lastName;
-
     }
 
     public void valid() {
@@ -45,6 +44,7 @@ public class MemberJoinRequest {
         isNull(this.passwordCheck, "passwordCheck");
         isNull(this.firstName, "firstName");
         isNull(this.lastName, "lastName");
+        passwordRegexValid(this.password);
         notEquals(this.password, this.passwordCheck, "password");
     }
 

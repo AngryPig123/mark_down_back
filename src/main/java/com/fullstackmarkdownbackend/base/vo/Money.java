@@ -1,8 +1,8 @@
-package com.fullstackmarkdownbackend.common.vo;
+package com.fullstackmarkdownbackend.base.vo;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.vo
- * fileName       : Name
+ * fileName       : Price
  * author         : AngryPig123
  * date           : 24. 9. 2.
  * description    :
@@ -11,8 +11,8 @@ package com.fullstackmarkdownbackend.common.vo;
  * -----------------------------------------------------------
  * 24. 9. 2.        AngryPig123       최초 생성
  */
-public class Name {
+public class Money {
 
-    //  todo 이름
-    
+    //  todo 가격, 돈과 관련
+
 }

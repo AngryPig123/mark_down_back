@@ -1,6 +1,6 @@
 package com.fullstackmarkdownbackend.util.validator;
 
-import com.fullstackmarkdownbackend.common.exception.BaseException;
+import com.fullstackmarkdownbackend.base.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 /**

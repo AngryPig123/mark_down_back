@@ -1,8 +1,8 @@
-package com.fullstackmarkdownbackend.common.vo;
+package com.fullstackmarkdownbackend.base.vo;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.vo
- * fileName       : Coordinate
+ * fileName       : Name
  * author         : AngryPig123
  * date           : 24. 9. 2.
  * description    :
@@ -11,8 +11,8 @@ package com.fullstackmarkdownbackend.common.vo;
  * -----------------------------------------------------------
  * 24. 9. 2.        AngryPig123       최초 생성
  */
-public class Coordinate {
+public class Name {
 
-    //  todo 좌표값
+    //  todo 이름
     
 }

@@ -1,8 +1,8 @@
-package com.fullstackmarkdownbackend.common.vo;
+package com.fullstackmarkdownbackend.base.vo;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.vo
- * fileName       : PhoneNumber
+ * fileName       : Address
  * author         : AngryPig123
  * date           : 24. 9. 2.
  * description    :
@@ -11,8 +11,8 @@ package com.fullstackmarkdownbackend.common.vo;
  * -----------------------------------------------------------
  * 24. 9. 2.        AngryPig123       최초 생성
  */
-public class PhoneNumber {
+public class Address {
 
-    //  todo 전화번호
-    
+    //  todo 주소값
+
 }

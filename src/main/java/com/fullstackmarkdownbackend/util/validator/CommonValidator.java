@@ -1,10 +1,16 @@
 package com.fullstackmarkdownbackend.util.validator;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.fullstackmarkdownbackend.util.regex.CommonRegex.PASSWORD_REGEX;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.common.validator
@@ -17,6 +23,7 @@ import java.util.function.BiFunction;
  * -----------------------------------------------------------
  * 24. 9. 14.        AngryPig123       최초 생성
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CommonValidator {
 
     public static String IS_NULL_MESSAGE = "is null";
@@ -59,6 +66,15 @@ public class CommonValidator {
         if (optional.isPresent()) {
             String exceptionMessage = MESSAGE_HELPER.apply(objectName, CONFLICT_MESSAGE);
             throw EXCEPTION_SUPPLIER.apply(exceptionMessage, HttpStatus.CONFLICT);
+        }
+    }
+
+    public static void passwordRegexValid(String password) {
+        Pattern pattern = Pattern.compile(PASSWORD_REGEX.getRegex());
+        Matcher matcher = pattern.matcher(password);
+        if (!matcher.matches()) {
+            String exceptionMessage = MESSAGE_HELPER.apply("password", PASSWORD_REGEX.getMessage());
+            throw EXCEPTION_SUPPLIER.apply(exceptionMessage, HttpStatus.BAD_REQUEST);
         }
     }
 
