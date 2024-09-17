@@ -59,6 +59,9 @@ public class MemberEntity extends BaseEntity {
     @Column(name = "last_name", length = 50, nullable = false, unique = true)
     private String lastName;
 
+    @OneToOne(mappedBy = "memberEntity")
+    private RefreshTokenEntity refreshTokenEntity;
+
     @Transient
     private final EncodedType passwordEncoderType = EncodedType.BCRYPT;
 

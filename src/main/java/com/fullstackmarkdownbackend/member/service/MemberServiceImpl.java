@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.fullstackmarkdownbackend.util.validator.CommonValidator.*;
+import static com.fullstackmarkdownbackend.util.validator.CommonValidator.optionalIsPresentException;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.member.service
@@ -43,21 +43,16 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public void insertMember(MemberJoinRequest memberJoinRequest) {
-
         memberJoinRequest.valid();
-
         String loginId = memberJoinRequest.getLoginId();
         Optional<MemberEntity> findByMember = memberRepository.findMemberEntityByLoginId(loginId);
         optionalIsPresentException(findByMember, "loginId");
-
         MemberEntity memberEntity = memberJoinRequest.toEntity();
         String password = memberEntity.getPassword();
         EncodedType passwordEncoderType = memberEntity.getPasswordEncoderType();
         Password passwordEncryption = encoderUtil.passwordEncryption(passwordEncoderType, password);
         memberEntity.passwordEncoding(passwordEncryption);
-
         memberRepository.save(memberEntity);
-
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(
                 memberJoinRequest.getLoginId(),
                 memberJoinRequest.getPassword()

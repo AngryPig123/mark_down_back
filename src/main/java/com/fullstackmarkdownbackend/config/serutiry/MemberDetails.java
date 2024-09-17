@@ -1,7 +1,9 @@
 package com.fullstackmarkdownbackend.config.serutiry;
 
 import com.fullstackmarkdownbackend.base.vo.EncodedType;
+import com.fullstackmarkdownbackend.base.vo.TokenType;
 import com.fullstackmarkdownbackend.member.entity.MemberEntity;
+import com.fullstackmarkdownbackend.token.dto.res.TokenResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -38,7 +40,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberEntity.getEmail();
+        return memberEntity.getLoginId();
     }
 
     @Override
@@ -48,6 +50,10 @@ public class MemberDetails implements UserDetails {
 
     public EncodedType encodedType() {
         return memberEntity.getPasswordEncoderType();
+    }
+
+    public TokenResponse getMemberRefreshToken() {
+        return new TokenResponse(TokenType.REFRESH_TOKEN, memberEntity.getRefreshTokenEntity().getRefreshToken());
     }
 
 }

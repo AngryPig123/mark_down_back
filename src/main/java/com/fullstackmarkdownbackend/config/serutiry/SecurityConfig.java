@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,6 +38,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
  */
 @Slf4j
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -62,11 +64,12 @@ public class SecurityConfig {
         httpSecurity.cors(config -> config.configurationSource(corsConfigurationSource));
     }
 
-
     private void authorizeHttpRequestsConfig(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((request) -> request
                 .requestMatchers("/api/v1/login").permitAll()
-                .anyRequest().authenticated());
+                .requestMatchers("/api/**").authenticated()
+                .anyRequest().permitAll()
+        );
     }
 
     @Bean
@@ -78,15 +81,13 @@ public class SecurityConfig {
                 .formLogin(withDefaults())
                 .httpBasic(withDefaults())
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class)
-                .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class)
+                .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class);
         return httpSecurity.build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(MemberDetailsService memberDetailsService, PasswordFactory passwordFactory) {
-        BasicUsernamePasswordAuthenticationProvider authenticationProvider =
-                new BasicUsernamePasswordAuthenticationProvider(passwordFactory, memberDetailsService);
+    public AuthenticationManager authenticationManager(BasicUsernamePasswordAuthenticationProvider authenticationProvider) {
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(false);
         return providerManager;

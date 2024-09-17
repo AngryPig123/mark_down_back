@@ -31,8 +31,8 @@ public class RefreshTokenEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "login_id")
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToOne
+    @JoinColumn(name = "member_id")  // 외래 키 칼럼 정의
     private MemberEntity memberEntity;
 
     @Column(name = "refresh_token")
@@ -51,6 +51,10 @@ public class RefreshTokenEntity extends BaseEntity {
 
     public static RefreshTokenEntity insertInit(MemberEntity memberEntity, String refreshToken) {
         return new RefreshTokenEntity(memberEntity, refreshToken);
+    }
+
+    public void refreshTokenUpdate(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
 }

@@ -25,4 +25,7 @@ public interface TokenService {
     TokenResponse refreshTokenIssue(Authentication authentication);
 
     void insertRefreshToken(MemberEntity memberEntity, String refreshToken);
+
+    TokenResponse validateAndReissueRefreshToken(String loginId);
+
 }

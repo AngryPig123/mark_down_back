@@ -56,7 +56,7 @@ public class JWTEntity {
         return new JWTEntity(
                 jwtSecretValue,
                 ISSUER,
-                ACCESS_TOKEN_SUBJECT,
+                REFRESH_TOKEN_SUBJECT,
                 Map.of(),
                 Timestamp.valueOf(LocalDateTime.now()),
                 Date.from(Instant.now().plus(REFRESH_TOKEN_EXPIRES_IN, ChronoUnit.MINUTES))

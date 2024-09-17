@@ -53,7 +53,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
     //  login api path 가 아닌경우 실행되면 안된다
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getServletPath().equals("/login"/* todo login api path */);
+        return request.getServletPath().equals("/api/v1/login"/* todo login api path */);
     }
 
 }

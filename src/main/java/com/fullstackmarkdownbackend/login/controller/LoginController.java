@@ -4,6 +4,7 @@ import com.fullstackmarkdownbackend.constants.ApplicationConstants;
 import com.fullstackmarkdownbackend.login.dto.req.MemberLoginRequest;
 import com.fullstackmarkdownbackend.login.dto.res.MemberJWTResponse;
 import com.fullstackmarkdownbackend.token.dto.res.TokenResponse;
+import com.fullstackmarkdownbackend.token.repository.RefreshTokenRepository;
 import com.fullstackmarkdownbackend.token.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,28 +43,27 @@ public class LoginController {
 
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @PostMapping
     public ResponseEntity<MemberJWTResponse> apiLogin(@RequestBody MemberLoginRequest memberLoginRequest) {
 
         String accessToken = "";
         String refreshToken = "";
+        String loginId = memberLoginRequest.getLoginId();
+        String password = memberLoginRequest.getPassword();
 
         Authentication authentication = UsernamePasswordAuthenticationToken.unauthenticated(
-                memberLoginRequest.getLoginId(),
-                memberLoginRequest.getPassword()
+                loginId,
+                password
         );
-
+        
         Authentication authenticationResponse = authenticationManager.authenticate(authentication);
         if (Objects.nonNull(authenticationResponse) && authenticationResponse.isAuthenticated()) {
-
             TokenResponse accessTokenResponse = tokenService.accessTokenIssue(authenticationResponse);
+            TokenResponse refreshReIssueTokenResponse = tokenService.validateAndReissueRefreshToken(loginId);
             accessToken = accessTokenResponse.getTokenValue();
-
-            //  로그인 할때 발급받는다.
-            TokenResponse refreshTokenResponse = tokenService.refreshTokenIssue(authenticationResponse);
-            refreshToken = refreshTokenResponse.getTokenValue();
-
+            refreshToken = refreshReIssueTokenResponse.getTokenValue();
         }
 
         return ResponseEntity.status(HttpStatus.OK).header(ApplicationConstants.JWT_HEADER, accessToken, refreshToken)
