@@ -1,5 +1,7 @@
 package com.fullstackmarkdownbackend.login.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +33,7 @@ public class LoginTestController {
 
     @GetMapping
     @PreAuthorize("hasRole('ROLE_MEMBER')")
-    public ResponseEntity<String> handleLoginTest() {
+    public ResponseEntity<String> handleLoginTest(HttpServletResponse httpServletResponse) {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 

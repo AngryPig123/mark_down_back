@@ -132,6 +132,12 @@ public class TokenServiceImpl implements TokenService {
         return new TokenResponse(REFRESH_TOKEN, refreshToken);
     }
 
+    /**
+     * throw ExpiredJwtException
+     * @param secretKey
+     * @param getRefreshToken
+     * @return
+     */
     private static Claims tokenParserHelper(SecretKey secretKey, String getRefreshToken) {
         return Jwts.parser()
                 .verifyWith(secretKey).build()
