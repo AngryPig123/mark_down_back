@@ -32,7 +32,7 @@ import static com.fullstackmarkdownbackend.version.VersionConstants.VERSION;
 public class LoginTestController {
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_MEMBER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> handleLoginTest(HttpServletResponse httpServletResponse) {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }

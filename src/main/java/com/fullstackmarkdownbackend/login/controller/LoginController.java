@@ -54,7 +54,7 @@ public class LoginController {
                 loginId,
                 password
         );
-        
+
         Authentication authenticationResponse = authenticationManager.authenticate(authentication);
         if (Objects.nonNull(authenticationResponse) && authenticationResponse.isAuthenticated()) {
             TokenResponse accessTokenResponse = tokenService.accessTokenIssue(authenticationResponse);
@@ -63,7 +63,7 @@ public class LoginController {
             refreshToken = refreshReIssueTokenResponse.getTokenValue();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).header(ApplicationConstants.JWT_HEADER, accessToken, refreshToken)
+        return ResponseEntity.status(HttpStatus.OK)
                 .body(new MemberJWTResponse(HttpStatus.OK.getReasonPhrase(), accessToken, refreshToken));
 
     }

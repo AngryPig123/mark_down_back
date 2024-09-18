@@ -1,16 +1,18 @@
 package com.fullstackmarkdownbackend.config.serutiry;
 
-import com.fullstackmarkdownbackend.config.PasswordFactory;
+import com.fullstackmarkdownbackend.config.serutiry.exceptionhandling.ProjectAccessDeniedHandler;
+import com.fullstackmarkdownbackend.config.serutiry.exceptionhandling.ProjectAuthenticationEntryPoint;
 import com.fullstackmarkdownbackend.config.serutiry.filter.JWTTokenGeneratorFilter;
 import com.fullstackmarkdownbackend.config.serutiry.filter.JWTTokenValidatorFilter;
-import com.fullstackmarkdownbackend.config.serutiry.service.MemberDetailsService;
 import com.fullstackmarkdownbackend.provider.authentication.BasicUsernamePasswordAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,8 +24,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
-
-import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.config.serutiry
@@ -45,11 +45,41 @@ public class SecurityConfig {
     private final JWTTokenValidatorFilter jWTTokenValidatorFilter;
     private final JWTTokenGeneratorFilter jWTTokenGeneratorFilter;
 
+    private final ProjectAuthenticationEntryPoint projectAuthenticationEntryPoint;
+    private final ProjectAccessDeniedHandler projectAccessDeniedHandler;
+
     @Value("${front.host}")
     private List<String> FRONT_HOSTS;
 
     @Value("${front.allow-method}")
     private List<String> ALLOW_METHODS;
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        authorizeHttpRequestsConfig(httpSecurity);
+        corsConfig(httpSecurity);
+        httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class)
+                .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class)
+                .exceptionHandling(exceptionHandlingConfig -> exceptionHandlingConfig
+                        .authenticationEntryPoint(projectAuthenticationEntryPoint)
+                        .accessDeniedHandler(projectAccessDeniedHandler)
+                );
+        return httpSecurity.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            BasicUsernamePasswordAuthenticationProvider authenticationProvider,
+            DefaultAuthenticationEventPublisher defaultAuthenticationEventPublisher
+    ) {
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+        providerManager.setEraseCredentialsAfterAuthentication(false);
+        providerManager.setAuthenticationEventPublisher(defaultAuthenticationEventPublisher);
+        return providerManager;
+    }
 
     private void corsConfig(HttpSecurity httpSecurity) throws Exception {
         UrlBasedCorsConfigurationSource corsConfigurationSource = new UrlBasedCorsConfigurationSource();
@@ -70,27 +100,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
         );
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        authorizeHttpRequestsConfig(httpSecurity);
-        corsConfig(httpSecurity);
-        httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)
-                .formLogin(withDefaults())
-                .httpBasic(withDefaults())
-                .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class)
-                .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class);
-        return httpSecurity.build();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(BasicUsernamePasswordAuthenticationProvider authenticationProvider) {
-        ProviderManager providerManager = new ProviderManager(authenticationProvider);
-        providerManager.setEraseCredentialsAfterAuthentication(false);
-        return providerManager;
     }
 
 }
