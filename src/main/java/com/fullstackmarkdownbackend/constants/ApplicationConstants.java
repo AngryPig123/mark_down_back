@@ -1,5 +1,7 @@
 package com.fullstackmarkdownbackend.constants;
 
+import static com.fullstackmarkdownbackend.version.VersionConstants.VERSION;
+
 /**
  * packageName    : com.fullstackmarkdownbackend.constants
  * fileName       : ApplicationConstants
@@ -12,6 +14,9 @@ package com.fullstackmarkdownbackend.constants;
  * 24. 9. 16.        AngryPig123       최초 생성
  */
 public class ApplicationConstants {
+
+    //  login api path
+    public static final String LOGIN_API_PATH = String.format("%s/login", VERSION); //  "/api/v1", "/api/v1/login"
 
     //  JWT
     public static final String JWT_HEADER = "Authorization";

@@ -16,6 +16,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,12 +27,14 @@ import org.springframework.util.StringUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.fullstackmarkdownbackend.base.vo.TokenType.ACCESS_TOKEN;
 import static com.fullstackmarkdownbackend.base.vo.TokenType.REFRESH_TOKEN;
-import static com.fullstackmarkdownbackend.constants.ApplicationConstants.REFRESH_TOKEN_COOKIE;
 
 /**
  * packageName    : com.fullstackmarkdownbackend.provider.token.service
@@ -73,33 +77,21 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public Authentication validateToken(@NotNull String token, HttpServletRequest request) {
+    public Authentication validateToken(@NotNull String accessToken, HttpServletRequest request) {
         SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
         try {
-            Claims claims = tokenParserHelper(secretKey, token);
-            String username = claims.get("loginId", String.class);
-            String authoritiesString = claims.get("authorities", String.class);
-            String[] authorities = StringUtils.tokenizeToStringArray(authoritiesString, ",");
-            List<GrantedAuthority> grantedAuthorities = new ArrayList<>(authorities.length);
-            for (String authority : authorities) {
-                grantedAuthorities.add(new SimpleGrantedAuthority(authority));
-            }
-            return new UsernamePasswordAuthenticationToken(username, null, grantedAuthorities);
+            Claims claims = tokenParserHelper(secretKey, accessToken);
+            return authenticationInfoHelper(claims);
         } catch (ExpiredJwtException expiredJwtException) {
-            String refreshToken = request.getHeader(REFRESH_TOKEN_COOKIE);
-            if (Objects.nonNull(refreshToken)) {
-                RefreshTokenEntity refreshTokenEntity = refreshTokenRepository.findRefreshTokenEntityByRefreshToken(refreshToken)
-                        .orElseThrow(() -> new RuntimeException("todo jwt refresh token not valid"));
-                String getRefreshToken = refreshTokenEntity.getRefreshToken();
-                tokenParserHelper(secretKey, getRefreshToken);
-                MemberEntity memberEntity = refreshTokenEntity.getMemberEntity();
-                MemberDetails memberDetails = (MemberDetails) memberDetailsService.loadUserByUsername(memberEntity.getLoginId());
-                return new UsernamePasswordAuthenticationToken(memberEntity.getLoginId(), null, memberDetails.getAuthorities());
-            }
-            throw new RuntimeException();
+            Claims exceptionClaims = expiredJwtException.getClaims();
+            String loginId = exceptionClaims.get("loginId", String.class);
+            MemberDetails memberDetails = (MemberDetails) memberDetailsService.loadUserByUsername(loginId);
+            Claims claims = tokenParserHelper(secretKey, memberDetails.getMemberRefreshToken().getTokenValue());
+            return authenticationInfoHelper(claims);
         } catch (JwtException jwtException) {
-            //  todo refresh 토큰도 만료된 상태임으로 재로그인을 시킨다.
-            throw new RuntimeException();
+            throw new BadCredentialsException("Invalid JWT token: " + jwtException.getMessage(), jwtException);
+        } catch (Exception exception) {
+            throw new AuthenticationServiceException("An unexpected error occurred while validating the token.", exception);
         }
     }
 
@@ -120,7 +112,7 @@ public class TokenServiceImpl implements TokenService {
     @Transactional
     public TokenResponse validateAndReissueRefreshToken(String loginId) {
         SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-        MemberEntity member = memberRepository.findMemberEntityByLoginId(loginId).orElseThrow(RuntimeException::new);   //  todo token exception 을 따로 만든다.
+        MemberEntity member = memberRepository.findMemberEntityByLoginId(loginId).orElseThrow(RuntimeException::new);
         RefreshTokenEntity refreshTokenEntity = member.getRefreshTokenEntity();
         String refreshToken = refreshTokenEntity.getRefreshToken();
         try {
@@ -134,6 +126,7 @@ public class TokenServiceImpl implements TokenService {
 
     /**
      * throw ExpiredJwtException
+     *
      * @param secretKey
      * @param getRefreshToken
      * @return
@@ -165,6 +158,17 @@ public class TokenServiceImpl implements TokenService {
                 .expiration(jwtEntity.getExpiration())
                 .signWith(secretKey)
                 .compact();
+    }
+
+    public Authentication authenticationInfoHelper(Claims claims) {
+        String loginId = claims.get("loginId", String.class);
+        String authoritiesString = claims.get("authorities", String.class);
+        String[] authorities = StringUtils.tokenizeToStringArray(authoritiesString, ",");
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(authorities.length);
+        for (String authority : authorities) {
+            grantedAuthorities.add(new SimpleGrantedAuthority(authority));
+        }
+        return new UsernamePasswordAuthenticationToken(loginId, null, grantedAuthorities);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.fullstackmarkdownbackend.login.controller;
 
-import com.fullstackmarkdownbackend.constants.ApplicationConstants;
 import com.fullstackmarkdownbackend.login.dto.req.MemberLoginRequest;
 import com.fullstackmarkdownbackend.login.dto.res.MemberJWTResponse;
 import com.fullstackmarkdownbackend.token.dto.res.TokenResponse;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
+import static com.fullstackmarkdownbackend.constants.ApplicationConstants.JWT_HEADER;
+import static com.fullstackmarkdownbackend.util.servlet.HttpHeaderUtil.setAuthorizationHeader;
 import static com.fullstackmarkdownbackend.version.VersionConstants.VERSION;
 
 /**
@@ -64,6 +65,7 @@ public class LoginController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
+                .header(JWT_HEADER, setAuthorizationHeader(accessToken))
                 .body(new MemberJWTResponse(HttpStatus.OK.getReasonPhrase(), accessToken, refreshToken));
 
     }

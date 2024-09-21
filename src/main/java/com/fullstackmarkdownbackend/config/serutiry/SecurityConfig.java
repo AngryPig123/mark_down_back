@@ -25,6 +25,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+import static com.fullstackmarkdownbackend.constants.ApplicationConstants.LOGIN_API_PATH;
+import static com.fullstackmarkdownbackend.version.VersionConstants.VERSION;
+
 /**
  * packageName    : com.fullstackmarkdownbackend.config.serutiry
  * fileName       : SecurityConfig
@@ -62,7 +65,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class)
-                .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class)
+                //  .addFilterAfter(jWTTokenGeneratorFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfig -> exceptionHandlingConfig
                         .authenticationEntryPoint(projectAuthenticationEntryPoint)
                         .accessDeniedHandler(projectAccessDeniedHandler)
@@ -96,8 +99,8 @@ public class SecurityConfig {
 
     private void authorizeHttpRequestsConfig(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((request) -> request
-                .requestMatchers("/api/v1/login").permitAll()
-                .requestMatchers("/api/**").authenticated()
+                .requestMatchers(LOGIN_API_PATH).permitAll()
+                .requestMatchers(String.format("%s/**", VERSION)).authenticated()
                 .anyRequest().permitAll()
         );
     }
