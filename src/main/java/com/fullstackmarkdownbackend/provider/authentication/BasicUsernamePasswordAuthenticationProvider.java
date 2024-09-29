@@ -2,8 +2,8 @@ package com.fullstackmarkdownbackend.provider.authentication;
 
 import com.fullstackmarkdownbackend.base.vo.EncodedType;
 import com.fullstackmarkdownbackend.config.PasswordFactory;
-import com.fullstackmarkdownbackend.config.serutiry.MemberDetails;
-import com.fullstackmarkdownbackend.config.serutiry.service.MemberDetailsService;
+import com.fullstackmarkdownbackend.config.security.MemberDetails;
+import com.fullstackmarkdownbackend.config.security.service.MemberDetailsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;

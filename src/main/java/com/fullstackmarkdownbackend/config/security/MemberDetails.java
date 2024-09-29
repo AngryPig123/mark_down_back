@@ -1,4 +1,4 @@
-package com.fullstackmarkdownbackend.config.serutiry;
+package com.fullstackmarkdownbackend.config.security;
 
 import com.fullstackmarkdownbackend.base.vo.EncodedType;
 import com.fullstackmarkdownbackend.base.vo.TokenType;

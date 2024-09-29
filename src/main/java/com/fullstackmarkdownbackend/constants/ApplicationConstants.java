@@ -16,7 +16,13 @@ import static com.fullstackmarkdownbackend.version.VersionConstants.VERSION;
 public class ApplicationConstants {
 
     //  login api path
-    public static final String LOGIN_API_PATH = String.format("%s/login", VERSION); //  "/api/v1", "/api/v1/login"
+    public static final String LOGIN_API_PATH = String.format("%s/login/**", VERSION); //  "/api/v1", "/api/v1/login"
+
+    //  join api path
+    public static final String JOIN_API_PATH = String.format("%s/join/**", VERSION); //  "/api/v1", "/api/v1/join"
+
+    //  join api path
+    public static final String CSRF_API_PATH = String.format("%s/security/csrf/**", VERSION); //  "/api/v1", "/api/v1/csrf"
 
     //  JWT
     public static final String JWT_HEADER = "Authorization";
@@ -28,5 +34,9 @@ public class ApplicationConstants {
 
     //  cookie
     public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
+
+    //  csrf
+    public static final String CSRF_TOKEN_HEADER = "X-CSRF-TOKEN";
+
 
 }

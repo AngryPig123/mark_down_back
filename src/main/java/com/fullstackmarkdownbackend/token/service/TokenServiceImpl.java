@@ -1,7 +1,7 @@
 package com.fullstackmarkdownbackend.token.service;
 
-import com.fullstackmarkdownbackend.config.serutiry.MemberDetails;
-import com.fullstackmarkdownbackend.config.serutiry.service.MemberDetailsService;
+import com.fullstackmarkdownbackend.config.security.MemberDetails;
+import com.fullstackmarkdownbackend.config.security.service.MemberDetailsService;
 import com.fullstackmarkdownbackend.member.entity.MemberEntity;
 import com.fullstackmarkdownbackend.member.repository.MemberRepository;
 import com.fullstackmarkdownbackend.token.dto.res.TokenResponse;

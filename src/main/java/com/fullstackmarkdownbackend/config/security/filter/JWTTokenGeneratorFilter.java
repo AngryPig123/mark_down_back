@@ -1,4 +1,4 @@
-package com.fullstackmarkdownbackend.config.serutiry.filter;
+package com.fullstackmarkdownbackend.config.security.filter;
 
 import com.fullstackmarkdownbackend.token.dto.res.TokenResponse;
 import com.fullstackmarkdownbackend.token.service.TokenService;

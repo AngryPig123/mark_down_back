@@ -1,4 +1,4 @@
-package com.fullstackmarkdownbackend.config.serutiry.filter;
+package com.fullstackmarkdownbackend.config.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fullstackmarkdownbackend.advice.GlobalExceptionResponseBody;
@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
