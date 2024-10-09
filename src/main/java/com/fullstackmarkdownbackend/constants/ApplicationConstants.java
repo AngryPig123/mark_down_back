@@ -22,8 +22,8 @@ public class ApplicationConstants {
     public static final String JOIN_API_PATH = String.format("%s/join/**", VERSION); //  "/api/v1", "/api/v1/join"
 
     //  join api path
-    public static final String CSRF_API_PATH = String.format("%s/security/csrf/**", VERSION); //  "/api/v1", "/api/v1/csrf"
-
+    public static final String CSRF_API_PATH = String.format("%s/security/csrf", VERSION); //  "/api/v1", "/api/v1/csrf"
+    //  /api/v1/security/csrf
     //  JWT
     public static final String JWT_HEADER = "Authorization";
     public static final String ISSUER = "ANGRY_PIG";

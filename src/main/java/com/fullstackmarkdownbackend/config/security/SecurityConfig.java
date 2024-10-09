@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -73,11 +74,11 @@ public class SecurityConfig {
                         .requireExplicitSave(false)
                 )
                 .csrf(csrfConfig -> csrfConfig
-                        .csrfTokenRepository(customCookieCsrfTokenRepository())
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(csrfTokenRequestAttributeHandler)
                 )
                 .authorizeHttpRequests(requestConfig -> requestConfig
-                                .requestMatchers(LOGIN_API_PATH, JOIN_API_PATH, CSRF_API_PATH).permitAll()
+                                .requestMatchers(LOGIN_API_PATH, JOIN_API_PATH, "/api/v1/security/csrf").permitAll()
 //                        .requestMatchers(String.format("%s/**", VERSION)).authenticated()
                                 .anyRequest().authenticated()
                 )
@@ -85,7 +86,7 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .addFilterBefore(jWTTokenValidatorFilter, BasicAuthenticationFilter.class)
-                .addFilterAfter(csrfCookieFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(csrfCookieFilter, BasicAuthenticationFilter.class)
                 .exceptionHandling(exceptionHandlingConfig -> exceptionHandlingConfig
                         .authenticationEntryPoint(projectAuthenticationEntryPoint)
                         .accessDeniedHandler(projectAccessDeniedHandler)
@@ -104,22 +105,6 @@ public class SecurityConfig {
         corsConfiguration.setMaxAge(3600L);
         corsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return corsConfigurationSource;
-    }
-
-    private CookieCsrfTokenRepository customCookieCsrfTokenRepository() {
-        CookieCsrfTokenRepository repository = new CookieCsrfTokenRepository();
-        repository.setHeaderName(CSRF_TOKEN_HEADER);
-        repository.setCookieCustomizer(customizer -> customizer
-                .httpOnly(false)
-        );
-        repository.setCookieCustomizer(cookie -> {
-            cookie.sameSite("None");
-            cookie.maxAge(3600L);
-            cookie.httpOnly(true);
-            cookie.secure(false);
-            cookie.domain("localhost");
-        });
-        return repository;
     }
 
 }

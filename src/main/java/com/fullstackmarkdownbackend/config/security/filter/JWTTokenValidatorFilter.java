@@ -20,8 +20,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import static com.fullstackmarkdownbackend.constants.ApplicationConstants.JWT_HEADER;
-import static com.fullstackmarkdownbackend.constants.ApplicationConstants.LOGIN_API_PATH;
+import static com.fullstackmarkdownbackend.constants.ApplicationConstants.*;
 import static com.fullstackmarkdownbackend.util.servlet.HttpHeaderUtil.getAuthorizationHeader;
 
 /**
@@ -72,7 +71,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        return request.getServletPath().equals(LOGIN_API_PATH);
+        return request.getServletPath().equals(LOGIN_API_PATH) || request.getServletPath().equals(CSRF_API_PATH);
     }
 
     //  나중에 유틸로 뺸다.
